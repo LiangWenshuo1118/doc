@@ -40,7 +40,9 @@ The data related keys in param.json is given as follows
   ],
 ```
 
-The data related keys specify the init data for traning initial DP models and structures used for model_devi calculations. "init_data_prefix" and "init_data_sys" specify the location of the init data. "sys_configs_prefix" and "sys_configs" specify the location of the structures. Here, the init data is provided at "...... /init/CH4.POSCAR.01x01x01/02.md/sys-0004-0001/deepmd". These structures are divided into two groups and provided at "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00000*/POSCAR" and "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00001*/POSCAR". 
+The data related keys specify the init data for traning initial DP models and structures used for model_devi calculations. "init_data_prefix" and "init_data_sys" specify the location of the init data. "sys_configs_prefix" and "sys_configs" specify the location of the structures. 
+
+Here, the init data is provided at "...... /init/CH4.POSCAR.01x01x01/02.md/sys-0004-0001/deepmd". These structures are divided into two groups and provided at "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00000*/POSCAR" and "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00001*/POSCAR". 
 
 ## training
 
@@ -64,11 +66,13 @@ The training related keys in param.json is given as follows
      }
   },
 ```
-The training related keys specify the detalis of training tasks. "numb_models" specifies the number of models to be trained. "default_training_param" specify the training parameters for `deepmd-kit`. Here, 4 DP models will be trained in `00.train`. Detailed introduction of training parameters can be found [here] (https://github.com/deepmodeling/deepmd-kit).
+The training related keys specify the detalis of training tasks. "numb_models" specifies the number of models to be trained. "default_training_param" specify the training parameters for `deepmd-kit`. 
 
-## exploration task
+Here, 4 DP models will be trained in `00.train`. Detailed explanation of training parameters can be found at [DeePMD-kit’s documentation](https://docs.deepmodeling.com/projects/deepmd/en/master/).
 
-The exploration task related keys in param.json is given as follows
+## exploration
+
+The exploration related keys in param.json is given as follows
 
 ```
   "model_devi_dt": 0.002,
@@ -109,24 +113,13 @@ The exploration task related keys in param.json is given as follows
     }
   ],
 ```
+The exploration related keys specify the detalis of exploration tasks. "model_devi_dt" specifies timestep for MD simulation. "model_devi_skip" specifies the number of structures skipped for saving in each MD. "model_devi_f_trust_lo" and "model_devi_f_trust_hi" specify the lower and upper bound of model_devi of forces for the selection. "model_devi_clean_traj" specifies whether to clean traj folders in MD. If type of model_devi_clean_traj is boolean type then it denote whether to clean traj folders in MD since they are too large.In "model_devi_jobs", "sys_idx" specifies the group of structures used for model_devi calculations, "temps" specifies the temperature (K) in MD, "press" specifies the pressure (Bar) in MD, "trj_freq" specifies the frequecy of trajectory saved in MD, "nsteps" specifies the running steps of MD, "ensemble" specifies the ensemble used in MD, and "_idx" specifies the index of iteration.
 
-- model_devi_dt：Timestep for MD.
-- model_devi_skip：Number of structures skipped for fp in each MD.
-- model_devi_f_trust_lo：Lower bound of forces for the selection. If List, should be set for each index in `sys_configs`, respectively. 
-- model_devi_f_trust_hi：Upper bound of forces for the selection. If List, should be set for each index in `sys_configs`, respectively.
-- model_devi_clean_traj: If type of model_devi_clean_traj is boolean type then it denote whether to clean traj folders in MD since they are too large. If it is Int type, then the most recent n iterations of traj folders will be retained, others will be removed.
-- model_devi_jobs: Settings for exploration in `01.model_devi`. Each dict in the list corresponds to one iteration. The index of `model_devi_jobs` exactly accord with index of iterations.
-> - sys_idx: Systems to be selected as the initial structure of MD and be explored. The index corresponds exactly to the `sys_configs`.
-> - temps: Temperature (**K**) in MD.
-> - press: Pressure (**Bar**) in MD.
-> - trj_freq: Frequecy of trajectory saved in MD.
-> - nsteps: Running steps of MD.
-> - ensemble: Determining which ensemble used in MD, **options** include “npt” and “nvt”.
-> - _idx: The index of iteration.
+Here, MD simulations are performed at the temperature of 100 K and the pressure of 1.0 Bar with an integrator time of 2 fs under the nvt ensemble. Two iterations are set in "model_devi_jobs". MD simulations are run for 300 and 3000 time steps with the first and second groups of structures in "sys_configs" in 00 and 01 iterations. We choose to save all structures generated in MD simulations and have set `"trj_freq"` as 10, so 30 and 300 structures are saved in 00 and 01 iterations. If the "max_devi_f" of saved structure falls between 0.05 and 0.15, DP-GEN will treat the structure as a candidate. We choose to clean traj folders in MD since they are too large. If you want to save the most recent n iterations of traj folders，you can set "model_devi_clean_traj" to be an integer.
 
-## Specify the labeling task
+## labeling 
 
-The labeling task related keys in param.json is given as follows
+The labeling related keys in param.json is given as follows
 
 ```
   "fp_style": "vasp",
@@ -140,12 +133,9 @@ The labeling task related keys in param.json is given as follows
   "fp_incar": "....../INCAR_methane"
 }
 ```
-- fp_style: Software for First Principles.
-- shuffle_poscar: 
-- fp_task_max: Maximum of  structures to be calculated in `02.fp` of each iteration.
-- fp_task_min: Minimum of structures to calculate in `02.fp` of each iteration.
-- fp_pp_path: Directory of psuedo-potential file to be used for 02.fp exists. 
-- fp_pp_files: Psuedo-potential file to be used for 02.fp. Note that the order of elements should correspond to the order in `type_map`. 
-- fp_incar: Input file for VASP. INCAR must specify KSPACING and KGAMMA.
+
+The labeling related keys specify the detalis of labeling tasks. "fp_style" specifies software for First Principles. "fp_task_max" and "fp_task_min" specify the minimum and maximum of structures to be calculated in `02.fp` of each iteration. "fp_pp_path" and "fp_pp_files" specify the location of psuedo-potential file to be used for 02.fp. "fp_incar" specifies input file for VASP. INCAR must specify KSPACING and KGAMMA.
+
+Here, a minimum of 1 and a maximum of 20 structures will be labeled using the VASP code with the INCAR provided at "....../INCAR_methane" and POTCAR provided at "....../methane/POTCAR" in each iteration. Note that the order of elements in POTCAR should correspond to the order in `type_map`. 
 
 All the keys of the DP-GEN are explained in detail in the section Parameters.
