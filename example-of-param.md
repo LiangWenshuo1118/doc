@@ -1,6 +1,6 @@
 # Example-of-param.json
 
-We have provided different examples of param.json in dpgen/examples/run/. In this section, we give a description of the param.json, taking dpgen/examples/run/dp2.x-lammps-vasp/param_CH4_deepmd-kit-2.0.1.json as an example. This is a param.json for a gas-phase methane molecule. Here, DeePMD-kit (v2.x), LAMMPS and VASP codes are used for training, exploration and labelling respectively.
+We have provided different examples of param.json in dpgen/examples/run/. In this section, we give a description of the param.json, taking dpgen/examples/run/dp2.x-lammps-vasp/param_CH4_deepmd-kit-2.0.1.json as an example. This is a param.json for a gas-phase methane molecule. Here, DeePMD-kit (v2.x), LAMMPS, and VASP codes are used for training, exploration, and labelling, respectively.
 
 ## basics
 
@@ -113,7 +113,7 @@ The exploration related keys in param.json is given as follows
     }
   ],
 ```
-The exploration related keys specify the detalis of exploration tasks. "model_devi_dt" specifies timestep for MD simulation. "model_devi_skip" specifies the number of structures skipped for saving in each MD. "model_devi_f_trust_lo" and "model_devi_f_trust_hi" specify the lower and upper bound of model_devi of forces for the selection. "model_devi_clean_traj" specifies whether to clean traj folders in MD. If type of model_devi_clean_traj is boolean type then it denote whether to clean traj folders in MD since they are too large.In "model_devi_jobs", "sys_idx" specifies the group of structures used for model_devi calculations, "temps" specifies the temperature (K) in MD, "press" specifies the pressure (Bar) in MD, "trj_freq" specifies the frequecy of trajectory saved in MD, "nsteps" specifies the running steps of MD, "ensemble" specifies the ensemble used in MD, and "_idx" specifies the index of iteration.
+The exploration related keys specify the detalis of exploration tasks. "model_devi_dt" specifies timestep for MD simulations. "model_devi_skip" specifies the number of structures skipped for saving in each MD simulation. "model_devi_f_trust_lo" and "model_devi_f_trust_hi" specify the lower and upper bound of model_devi of forces for the selection. "model_devi_clean_traj" specifies whether to clean traj folders in MD simulations. "model_devi_clean_traj" denote whether to clean traj folders in MD simulations. In "model_devi_jobs", "sys_idx" specifies the group of structures used for model_devi calculations, "temps" specifies the temperature (K) in MD simulations, "press" specifies the pressure (Bar) in MD simulations, "trj_freq" specifies the frequecy of trajectory saved in MD simulations, "nsteps" specifies the running steps of MD simulations, "ensemble" specifies the ensemble used in MD simulations, and "_idx" specifies the index of iteration.
 
 Here, MD simulations are performed at the temperature of 100 K and the pressure of 1.0 Bar with an integrator time of 2 fs under the nvt ensemble. Two iterations are set in "model_devi_jobs". MD simulations are run for 300 and 3000 time steps with the first and second groups of structures in "sys_configs" in 00 and 01 iterations. We choose to save all structures generated in MD simulations and have set `"trj_freq"` as 10, so 30 and 300 structures are saved in 00 and 01 iterations. If the "max_devi_f" of saved structure falls between 0.05 and 0.15, DP-GEN will treat the structure as a candidate. We choose to clean traj folders in MD since they are too large. If you want to save the most recent n iterations of traj folders，you can set "model_devi_clean_traj" to be an integer.
 
@@ -136,6 +136,6 @@ The labeling related keys in param.json is given as follows
 
 The labeling related keys specify the detalis of labeling tasks. "fp_style" specifies software for First Principles. "fp_task_max" and "fp_task_min" specify the minimum and maximum of structures to be calculated in `02.fp` of each iteration. "fp_pp_path" and "fp_pp_files" specify the location of psuedo-potential file to be used for 02.fp. "fp_incar" specifies input file for VASP. INCAR must specify KSPACING and KGAMMA.
 
-Here, a minimum of 1 and a maximum of 20 structures will be labeled using the VASP code with the INCAR provided at "....../INCAR_methane" and POTCAR provided at "....../methane/POTCAR" in each iteration. Note that the order of elements in POTCAR should correspond to the order in `type_map`. 
+Here, a minimum of 1 and a maximum of 20 structures will be labeled using the VASP code with the INCAR provided at "....../INCAR_methane" and POTCAR provided at "....../methane/POTCAR" in each iteration. Note that the order of elements in POSCAR and POTCAR should correspond to the order in `type_map`. 
 
 All the keys of the DP-GEN are explained in detail in the section Parameters.
