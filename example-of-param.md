@@ -1,10 +1,8 @@
-# Specify the Run process
+# Example-of-param.json
 
-In the run process of the DP-GEN, we may use different softwares or versions for exploration, labeling, and training. We can specify the task as we expect in param.json. We have provided different examples of param.json in dpgen/examples/run/. 
+We have provided different examples of param.json in dpgen/examples/run/. In this section, we give a description of the param.json, taking dpgen/examples/run/dp2.x-lammps-vasp/param_CH4_deepmd-kit-2.0.1.json as an example. This is a param.json for a gas-phase methane molecule. Here, DeePMD-kit (v2.x), LAMMPS and VASP codes are used for training, exploration and labelling respectively.
 
-In this section, we give a description of the param.json, taking dpgen/examples/run/dp2.x-lammps-vasp/param_CH4_deepmd-kit-2.0.1.json as an example. Here, DeePMD-kit (v2.x), LAMMPS and VASP codes are used for training, exploration and labelling respectively.
-
-## Specify the basics
+## basics
 
 The basics related keys in param.json is given as follows
 
@@ -19,14 +17,11 @@ The basics related keys in param.json is given as follows
   ],
 ```
 
-The basics related keys specify the information about the system. This is a param.json for a gas-phase methane molecule.
+The basics related keys specify the basics information about the system. "type_map" gives the atom types, i.e. "H" and "C". "mass_map" gives the standard atom weights, i.e. "1" and "12". 
 
-- type_map: Atom types.
-- mass_map: Standard atom weights.
+## data
 
-## Specify the init data
-
-The init data related keys in param.json is given as follows
+The data related keys in param.json is given as follows
 
 ```
   "init_data_prefix": "....../init/",
@@ -45,16 +40,11 @@ The init data related keys in param.json is given as follows
   ],
 ```
 
-The init data related keys specify the data for traning initial DP models and structures used for model_devi calculations. 
+The data related keys specify the init data for traning initial DP models and structures used for model_devi calculations. "init_data_prefix" and "init_data_sys" specify the location of the init data. "sys_configs_prefix" and "sys_configs" specify the location of the structures. Here, the init data is provided at "...... /init/CH4.POSCAR.01x01x01/02.md/sys-0004-0001/deepmd". These structures are divided into two groups and provided at "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00000*/POSCAR" and "....../init/CH4.POSCAR.01x01x01/01.scale_pert/sys-0004-0001/scale*/00001*/POSCAR". 
 
-- init_data_prefix: Prefix of initial data directories.
-- init_data_sys: Directories of initial data. You may use either absolute or relative path here.
-- sys_configs_prefix: Prefix of `sys_configs`.
-- sys_configs: Containing directories of structures to be explored in iterations. Wildcard characters are supported here.
+## training
 
-## Specify the training task
-
-The training task related keys in param.json is given as follows
+The training related keys in param.json is given as follows
 
 ```
   "numb_models": 4,
@@ -74,11 +64,9 @@ The training task related keys in param.json is given as follows
      }
   },
 ```
+The training related keys specify the detalis of training tasks. "numb_models" specifies the number of models to be trained. "default_training_param" specify the training parameters for `deepmd-kit`. Here, 4 DP models will be trained in `00.train`. Detailed introduction of training parameters can be found [here] (https://github.com/deepmodeling/deepmd-kit).
 
-- numb_models：Number of models to be trained in `00.train`.
-- default_training_param：Training parameters for `deepmd-kit` in `00.train`. You can find instructions from here: (https://github.com/deepmodeling/deepmd-kit).
-
-## Specify the exploration task
+## exploration task
 
 The exploration task related keys in param.json is given as follows
 
