@@ -17,7 +17,7 @@ In this section, we will show you how to perform train task at a local workstati
 
 ### Performing train task at a local workstation
 
-In this example, we perform the train task on a local workstation.
+In this example, we perform the `train` task on a local workstation.
 
 ```json
 "train": [
@@ -114,87 +114,5 @@ VASP code is used for fp task and mpi is used for parallel computing, so "mpirun
 In the machine parameter, "context_type" is modified to "SSHContext" and "batch_type" is modified to "PBS". It is worth noting that "remote_root" should be set to an accessible path on the remote PBS cluster. "remote_profile" is added to specify the information used to connect the remote cluster, including hostname, username, password, port, etc. 
 
 In the resources parameter, we set "gpu_per_node" to 0 since it is cost-effective to use the CPU for VASP calculations.
-
-Complete examples of new DPDispatcher can be found at dpgen/examples/machine/DeePMD-kit-2.x/.
-
-```json
-{
-  "api_version": "1.0",
-  "train": [
-    {
-      "command": "dp",
-      "machine": {
-        "batch_type": "PBS",
-        "context_type": "SSHContext",
-        "local_root": "./",
-        "remote_root": "/home/user1234/work_path",
-        "remote_profile": {
-            "hostname": "39.xxx.xx.xx",
-            "username": "user1234"
-        }
-      },
-      "resources": {
-        "number_node": 1,
-        "cpu_per_node": 4,
-        "gpu_per_node": 1,
-        "queue_name": "T4_4_15",
-        "group_size": 1,
-        "custom_flags":["#SBATCH --mem=32G"],
-        "strategy": {"if_cuda_multi_devices": true},
-        "para_deg": 3,
-        "source_list": ["/home/user1234/deepmd.env"]
-      }
-    }
-  ],
-  "model_devi":[
-    {
-      "command": "lmp",
-      "machine":{
-        "batch_type": "PBS",
-        "context_type": "SSHContext",
-        "local_root": "./",
-        "remote_root": "/home/user1234/work_path",
-        "remote_profile": {
-          "hostname": "39.xxx.xx.xx",
-          "username": "user1234"
-        }
-      },
-      "resources": {
-        "number_node": 1,
-        "cpu_per_node": 4,
-        "gpu_per_node": 1,
-        "queue_name": "T4_4_15",
-        "group_size": 5,
-        "source_list": ["/home/user1234/deepmd.env"]
-      }
-    }
-  ],
-  "fp":[
-    {
-      "command": "vasp_std",
-      "machine":{
-        "batch_type": "PBS",
-        "context_type": "SSHContext",
-        "local_root": "./",
-        "remote_root": "/home/user1234/work_path",
-        "remote_profile": {
-          "hostname": "39.xxx.xx.xx",
-          "username": "user1234"
-        }
-      },
-      "resources": {
-        "number_node": 1,
-        "cpu_per_node": 32,
-        "gpu_per_node": 0,
-        "queue_name": "G_32_128",
-        "group_size": 1,
-        "source_list": ["~/vasp.env"]
-      }
-    }
-  ]
-}
-```
-
-When switching into a new machine, you may modifying the machine.json, according to the actual circumstance. Once you have finished, the machine.json can be re-used for any DP-GEN tasks without any extra efforts.
 
 Explicit descriptions on keys in machine.json will be given in the following section.
