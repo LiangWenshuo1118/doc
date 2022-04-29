@@ -17,7 +17,7 @@ In this section, we will show you how to perform train task at a local workstati
 
 ### Performing train task at a local workstation
 
-In this example, we perform the `train` task on a local workstation.
+In this example, we perform the train task on a local workstation.
 
 ```json
 "train": [
