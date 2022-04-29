@@ -4,6 +4,8 @@
 
 DPDispatcher has updated and the api of `machine.json` is changed. DP-GEN will use new DPDispatcher if the value of key `api_version` in `machine.json` is equal or large than `1.0`. And for now dpdispatcher is maintained on a seperate [repo](https://github.com/deepmodeling/dpdispatcher). Please check the [documents](https://deepmd.readthedocs.io/projects/dpdispatcher/en/latest/) for more information about new DPDispatcher. 
 
+DP-GEN will use old dpdispatcher if the key `api_version` is not specified in `machine.json` or the `api_version` is smaller than `1.0`. This gurantees that the old `machine.json`s still work.
+
 ## New DPDispatcher
 
 Each iteration in the run process of DP-GEN is composed of three steps: exploration, labeling, and training. Accordingly, machine.json is composed of three parts: `train`,`model_devi` and `fp`. Each part is a list of dicts. Each dict can be considered as an independent environmnet for calculation. 
@@ -15,7 +17,7 @@ In this section, we will show you how to perform `train` task at a local worksta
 
 ### Performing `train` task at a local workstation
 
-In this example, we perform the `train` task of the DP-GEN on a local workstation.
+In this example, we perform the `train` task on a local workstation.
 
 ```json
 "train": [
@@ -38,7 +40,7 @@ In this example, we perform the `train` task of the DP-GEN on a local workstatio
   ],
 ```
 
-The "command" for the training task in the DeePMD-kit is "dp".
+The "command" for the `train` task in the DeePMD-kit is "dp".
 
 In machine parameters, "batch_type" specifies the type of job scheduling system. If there is no job scheduling system, we can use the "Shell" to perform the task. "context_type" specifies the method of data transfer, and "local" means copying and moving data via local file storage systems (e.g. cp, mv, etc.). In DP-GEN, the paths of all tasks are automatically located and set by the software, and therefore "local_root" is always set to ". /". The input file for each task will be sent to the "remote_root" and the task will be performed there, so we need to make sure that the path exists.
 
@@ -46,7 +48,7 @@ In the resources parameter, "number_node", "cpu_per_node", and "gpu_per_node" sp
 
 ### Perform `model_devi` task at a local Slurm cluster
 
-In this example, we perform the `model_devi` task of the DP-GEN at a local Slurm workstation.
+In this example, we perform the `model_devi` task at a local Slurm workstation.
 
 ```json
 "model_devi": [
@@ -71,7 +73,7 @@ In this example, we perform the `model_devi` task of the DP-GEN at a local Slurm
 ],
 ```
 
-The "command" for the model_devi task in the LAMMPS is "lmp".
+The "command" for the `model_devi` task in the LAMMPS is "lmp".
 
 In the machine parameter, we specify the type of job scheduling system by changing the "batch_type" to "Slurm".
 
@@ -79,7 +81,7 @@ In the resources parameter, we specify the name of the queue to which the task i
 
 ### Perform `fp` task in a remote PBS cluster
 
-In this example, we perform the `fp` task of the DP-GEN at a remote PBS cluster that can be accessed via SSH.
+In this example, we perform the `fp` task at a remote PBS cluster that can be accessed via SSH.
 
 ```json
 "fp": [
@@ -107,13 +109,13 @@ In this example, we perform the `fp` task of the DP-GEN at a remote PBS cluster 
 ],
 ```
 
-VASP code is used for first-principle calculations and mpi is used for parallel computing, so "mpirun -n 32" is added to specify the number of parallel threads.
+VASP code is used for `fp` task and mpi is used for parallel computing, so "mpirun -n 32" is added to specify the number of parallel threads.
 
 In the machine parameter, "context_type" is modified to "SSHContext" and "batch_type" is modified to "PBS". It is worth noting that "remote_root" should be set to an accessible path on the remote PBS cluster. "remote_profile" is added to specify the information used to connect the remote cluster, including hostname, username, password, port, etc. 
 
 In the resources parameter, we set "gpu_per_node" to 0 since it is cost-effective to use the CPU for VASP calculations.
 
-Complete examples of new DP-GEN's machine.json can be found at dpgen/examples/machine/DeePMD-kit-2.x/.
+Complete examples of new DPDispatcher can be found at dpgen/examples/machine/DeePMD-kit-2.x/.
 
 ```json
 {
@@ -193,108 +195,6 @@ Complete examples of new DP-GEN's machine.json can be found at dpgen/examples/ma
 }
 ```
 
-### Old DPDispatcher
+When switching into a new machine, you may modifying the `machine.json`, according to the actual circumstance. Once you have finished, the `MACHINE` can be re-used for any DP-GEN tasks without any extra efforts.
 
-DP-GEN will use old dpdispatcher if the key `api_version` is not specified in `machine.json` or the `api_version` is smaller than `1.0`. This gurantees that the old `machine.json`s still work.
-
-
-When switching into a new machine, you may modifying the `MACHINE`, according to the actual circumstance. Once you have finished, the `MACHINE` can be re-used for any DP-GEN tasks without any extra efforts.
-
-An example for `MACHINE` is:
-```json
-{
-  "train": [
-    {
-      "machine": {
-        "batch": "slurm",
-        "hostname": "localhost",
-        "port": 22,
-        "username": "Angus",
-        "work_path": "....../work"
-      },
-      "resources": {
-        "numb_node": 1,
-        "numb_gpu": 1,
-        "task_per_node": 4,
-        "partition": "AdminGPU",
-        "exclude_list": [],
-        "source_list": [
-          "....../train_tf112_float.env"
-        ],
-        "module_list": [],
-        "time_limit": "23:0:0",
-        "qos": "data"
-      },
-      "command": "USERPATH/dp"
-    }
-  ],
-  "model_devi": [
-    {
-      "machine": {
-        "batch": "slurm",
-        "hostname": "localhost",
-        "port": 22,
-        "username": "Angus",
-        "work_path": "....../work"
-      },
-      "resources": {
-        "numb_node": 1,
-        "numb_gpu": 1,
-        "task_per_node": 2,
-        "partition": "AdminGPU",
-        "exclude_list": [],
-        "source_list": [
-          "......./lmp_tf112_float.env"
-        ],
-        "module_list": [],
-        "time_limit": "23:0:0",
-        "qos": "data"
-      },
-      "command": "lmp_serial",
-      "group_size": 1
-    }
-  ],
-  "fp": [
-    {
-      "machine": {
-        "batch": "slurm",
-        "hostname": "localhost",
-        "port": 22,
-        "username": "Angus",
-        "work_path": "....../work"
-      },
-      "resources": {
-        "task_per_node": 4,
-        "numb_gpu": 1,
-        "exclude_list": [],
-        "with_mpi": false,
-        "source_list": [],
-        "module_list": [
-          "mpich/3.2.1-intel-2017.1",
-          "vasp/5.4.4-intel-2017.1",
-          "cuda/10.1"
-        ],
-        "time_limit": "120:0:0",
-        "partition": "AdminGPU",
-        "_comment": "that's All"
-      },
-      "command": "vasp_gpu",
-      "group_size": 1
-    }
-  ]
-}
-```
-
-
-
-
- Key   | `train`          | `model_devi`                                                    | `fp`                                                     |
-| :---------------- | :--------------------- | :-------------------------------------- | :-------------------------------------------------------------|
-| machine | NEED  | NEED | NEED
-| resources | NEED | NEED | NEED
-| command | NEED  |NEED |  NEED  
-| group_size | NEED | NEED | NEED |
-
-The following table gives explicit descriptions on keys in param.json.
-
-
+Explicit descriptions on keys in machine.json will be given in the following section.
