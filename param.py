@@ -252,55 +252,30 @@ def model_devi_activation_func_args ():
         Argument("model_devi_activation_func", List of list of string, optional =True, doc = model_devi_activation_func)
     ]		    
 
-	def training_args():
-    link_sys = make_link("systems", "training/systems")
-    doc_systems = 'The data systems. This key can be provided with a listthat specifies the systems, or be provided with a string by which the prefix of all systems are given and the list of the systems is automatically generated.'
-    doc_set_prefix = f'The prefix of the sets in the {link_sys}.'
-    doc_stop_batch = 'Number of training batch. Each training uses one batch of data.'
-    doc_batch_size = f'This key can be \n\n\
-- list: the length of which is the same as the {link_sys}. The batch size of each system is given by the elements of the list.\n\n\
-- int: all {link_sys} use the same batch size.\n\n\
-- string "auto": automatically determines the batch size so that the batch_size times the number of atoms in the system is no less than 32.\n\n\
-- string "auto:N": automatically determines the batch size so that the batch_size times the number of atoms in the system is no less than N.'
-    doc_seed = 'The random seed for getting frames from the training data set.'
-    doc_disp_file = 'The file for printing learning curve.'
-    doc_disp_freq = 'The frequency of printing learning curve.'
-    doc_numb_test = 'Number of frames used for the test during training.'
-    doc_save_freq = 'The frequency of saving check point.'
-    doc_save_ckpt = 'The file name of saving check point.'
-    doc_disp_training = 'Displaying verbose information during training.'
-    doc_time_training = 'Timing durining training.'
-    doc_profiling = 'Profiling during training.'
-    doc_profiling_file = 'Output file for profiling.'
-    doc_train_auto_prob_style = 'Determine the probability of systems automatically. The method is assigned by this key and can be\n\n\
-- "prob_uniform"  : the probability all the systems are equal, namely 1.0/self.get_nsystems()\n\n\
-- "prob_sys_size" : the probability of a system is proportional to the number of batches in the system\n\n\
-- "prob_sys_size;stt_idx:end_idx:weight;stt_idx:end_idx:weight;..." : the list of systems is devided into blocks. A block is specified by `stt_idx:end_idx:weight`, where `stt_idx` is the starting index of the system, `end_idx` is then ending (not including) index of the system, the probabilities of the systems in this block sums up to `weight`, and the relatively probabilities within this block is proportional to the number of batches in the system.'
-    doc_train_sys_probs = "A list of float, should be of the same length as `train_systems`, specifying the probability of each system."
-    doc_tensorboard = 'Enable tensorboard'
-    doc_tensorboard_log_dir = 'The log directory of tensorboard outputs'
+def model_devi_jobs_args():
+    doc_sys_idx = 'Systems to be selected as the initial structure of MD and be explored. The index corresponds exactly to the sys_configs.'
+    doc_temps = 'Temperature (K) in MD.'
+    doc_press = 'Pressure (Bar) in MD.'
+    doc_trj_freq = 'Frequecy of trajectory saved in MD.'
+    doc_nsteps = 'Running steps of MD.'	
+    doc_ensembles = 'Determining which ensemble used in MD, options include “npt” and “nvt”.'
+    doc_neidelay = 'delay building until this many steps since last build.'	
+    doc_taut = 'Coupling time of thermostat (ps).'
+    doc_taup = 'Coupling time of barostat (ps).'
 
     args = [
-        Argument("systems", [list,str], optional = False, doc = doc_systems, alias = ["trn_systems"]),
-        Argument("set_prefix", str, optional = True, default = 'set', doc = doc_set_prefix),
-        Argument("auto_prob", str, optional = True, default = "prob_sys_size", doc = doc_train_auto_prob_style, alias = ["trn_auto_prob", "auto_prob_style"]),
-        Argument("sys_probs", list, optional = True, default = None, doc = doc_train_sys_probs, alias = ["trn_sys_probs"]),
-        Argument("batch_size", [list,int,str], optional = True, default = 'auto', doc = doc_batch_size, alias = ["trn_batch_size"]),
-        Argument("numb_steps", int, optional = False, doc = doc_stop_batch, alias = ["stop_batch"]),
-        Argument("seed", [int,None], optional = True, doc = doc_seed),
-        Argument("disp_file", str, optional = True, default = 'lcueve.out', doc = doc_disp_file),
-        Argument("disp_freq", int, optional = True, default = 1000, doc = doc_disp_freq),
-        Argument("numb_test", [list,int,str], optional = True, default = 1, doc = doc_numb_test),
-        Argument("save_freq", int, optional = True, default = 1000, doc = doc_save_freq),
-        Argument("save_ckpt", str, optional = True, default = 'model.ckpt', doc = doc_save_ckpt),
-        Argument("disp_training", bool, optional = True, default = True, doc = doc_disp_training),
-        Argument("time_training", bool, optional = True, default = True, doc = doc_time_training),
-        Argument("profiling", bool, optional = True, default = False, doc = doc_profiling),
-        Argument("profiling_file", str, optional = True, default = 'timeline.json', doc = doc_profiling_file),
-        Argument("tensorboard", bool, optional = True, default = False, doc = doc_tensorboard),
-        Argument("tensorboard_log_dir", str, optional = True, default = 'log', doc = doc_tensorboard_log_dir),
+        Argument("sys_idx", List of integer, optional = False, doc = doc_sys_idx),
+        Argument("temps", List of integer, optional = False, default = 'set', doc = doc_temps),
+        Argument("press", List of integer, optional = False, default = "prob_sys_size", doc = doc_press),
+        Argument("trj_freq", Integer, optional = False, doc = doc_trj_freq),
+        Argument("nsteps", Integer, optional = False, default = 'auto', doc = doc_nsteps),
+        Argument("ensembles", String, optional = False, doc = doc_ensembles),
+        Argument("neidelay", Integer, optional = True, doc = doc_neidelay),
+        Argument("taut", Float, optional = True, default = 'log', doc = doc_taut),
+        Argument("taup", Float, optional = True, default = 'log', doc = doc_taup),	    
     ]
 
-    doc_training = 'The training options'
-    return Argument("training", dict, args, [], doc = doc_training)    
+    doc_model_devi_jobs = 'Settings for exploration in 01.model_devi. Each dict in the list corresponds to one iteration. The index of model_devi_jobs exactly accord with index of iterations'
+    return Argument("model_devi_jobs", List of dict, args, [], doc = model_devi_jobs)    
  
+	
