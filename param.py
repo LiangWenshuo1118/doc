@@ -26,23 +26,6 @@ def use_ele_temp_args ():
         Argument("use_ele_temp", int, optional = False, default = 0, doc = doc_use_ele_temp)
     ]
   
-from context import dargs
-from dargs import dargs, Argument, 
-
-def type_map_args ():
-    doc_type_map = 'Atom types.'
-    
-    return [
-        Argument("type_map", List of string, optional = False, doc = doc_type_map)
-    ]
-  
-def mass_map_args ():
-    doc_mass_map = 'Standard atom weights.'
-    
-    return [
-        Argument("mass_map", List of float, optional = False, doc = doc_mass_map)
-    ]
-
 # Data
 def init_data_prefix_args ():
     doc_init_data_prefix = 'Prefix of initial data directories.'
