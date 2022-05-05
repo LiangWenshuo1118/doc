@@ -194,62 +194,62 @@ def model_devi_numb_candi_f_args ():
     doc_model_devi_numb_candi_f = 'See model_devi_adapt_trust_lo.'
     
     return [
-        Argument("model_devi_numb_candi_f", Int, optional =True, doc = model_devi_numb_candi_f)
+        Argument("model_devi_numb_candi_f", Int, optional =True, doc = doc_model_devi_numb_candi_f)
     ]
 
 def model_devi_numb_candi_v_args ():
     doc_model_devi_numb_candi_v = 'See model_devi_adapt_trust_lo.'
     
     return [
-        Argument("model_devi_numb_candi_v", Int, optional =True, doc = model_devi_numb_candi_v)
+        Argument("model_devi_numb_candi_v", Int, optional =True, doc = doc_model_devi_numb_candi_v)
     ]
 
 def model_devi_perc_candi_f_args ():
     doc_model_devi_perc_candi_f = 'See model_devi_adapt_trust_lo.'
     
     return [
-        Argument("model_devi_perc_candi_f", Float, optional =True, doc = model_devi_perc_candi_f)
+        Argument("model_devi_perc_candi_f", Float, optional =True, doc = doc_model_devi_perc_candi_f)
 
 def model_devi_perc_candi_v_args ():
     doc_model_devi_perc_candi_v = 'See model_devi_adapt_trust_lo.'
     
     return [
-        Argument("model_devi_perc_candi_v", Float, optional =True, doc = model_devi_perc_candi_v)
+        Argument("model_devi_perc_candi_v", Float, optional =True, doc = doc_model_devi_perc_candi_v)
     ]
 
 def model_devi_f_avg_relative_args ():
     doc_model_devi_f_avg_relative = 'Normalized the force model deviations by the RMS force magnitude along the trajectory. This key should not be used with use_relative.'
     
     return [
-        Argument("model_devi_f_avg_relative", Boolean, optional =True, doc = model_devi_f_avg_relative)
+        Argument("model_devi_f_avg_relative", Boolean, optional =True, doc = doc_model_devi_f_avg_relative)
     ]
 	    
 def model_devi_f_avg_relative_args ():
     doc_model_devi_f_avg_relative = 'Normalized the force model deviations by the RMS force magnitude along the trajectory. This key should not be used with use_relative.'
     
     return [
-        Argument("model_devi_f_avg_relative", Boolean, optional =True, doc = model_devi_f_avg_relative)
+        Argument("model_devi_f_avg_relative", Boolean, optional =True, doc = doc_model_devi_f_avg_relative)
     ]
 
 def model_devi_clean_traj_args ():
     doc_model_devi_clean_traj = 'If type of model_devi_clean_traj is boolean type then it denote whether to clean traj folders in MD since they are too large. If it is Int type, then the most recent n iterations of traj folders will be retained, others will be removed.'
     
     return [
-        Argument("model_devi_clean_traj", Boolean or Int, optional =False, doc = model_devi_clean_traj)
+        Argument("model_devi_clean_traj", Boolean or Int, optional =False, doc = doc_model_devi_clean_traj)
     ]
 
 def model_devi_nopbc_args ():
     doc_model_devi_nopbc = 'Assume open boundary condition in MD simulations.'
     
     return [
-        Argument("model_devi_nopbc", Boolean, optional =False, doc = model_devi_nopbc)
+        Argument("model_devi_nopbc", Boolean, optional =False, doc = doc_model_devi_nopbc)
     ]	    
 	
 def model_devi_activation_func_args ():
     doc_model_devi_activation_func = 'Set activation functions for models, length of the List should be the same as numb_models, and two elements in the list of string respectively assign activation functions to the embedding and fitting nets within each model. Backward compatibility: the orginal "List of String" format is still supported, where embedding and fitting nets of one model use the same activation function, and the length of the List should be the same as numb_models.'
     
     return [
-        Argument("model_devi_activation_func", List of list of string, optional =True, doc = model_devi_activation_func)
+        Argument("model_devi_activation_func", List of list of string, optional =True, doc = doc_model_devi_activation_func)
     ]		    
 
 def model_devi_jobs_args():
@@ -276,6 +276,100 @@ def model_devi_jobs_args():
     ]
 
     doc_model_devi_jobs = 'Settings for exploration in 01.model_devi. Each dict in the list corresponds to one iteration. The index of model_devi_jobs exactly accord with index of iterations'
-    return Argument("model_devi_jobs", List of dict, args, [], doc = model_devi_jobs)    
+    return Argument("model_devi_jobs", List of dict, args, [], doc = doc_model_devi_jobs)    
+ 
+# Labeling
+# VASP
+def fp_style_VASP_args ():
+    doc_fp_pp_path = 'Directory of psuedo-potential file to be used for 02.fp exists.'
+    doc_fp_pp_files = 'Psuedo-potential file to be used for 02.fp. Note that the order of elements should correspond to the order in type_map.'
+    doc_fp_incar = 'Input file for VASP. INCAR must specify KSPACING and KGAMMA.'
+    doc_fp_aniso_kspacing = 'Set anisotropic kspacing. Usually useful for 1-D or 2-D materials. Only support VASP. If it is setting the KSPACING key in INCAR will be ignored.'
+    doc_fp_pp_path = 'If cvasp is true, DP-GEN will use Custodian to help control VASP calculation.'
+    
+    return [
+        Argument("fp_pp_path", String, optional =False, doc = doc_fp_pp_path),
+        Argument("fp_pp_files", List of string, optional =False, doc = doc_fp_pp_files),
+        Argument("fp_incar", String, optional =False, doc = doc_fp_incarc),
+        Argument("fp_aniso_kspacing", List of integer, optional =False, doc = doc_fp_aniso_kspacing),
+        Argument("cvasp", Boolean, optional =False, doc = doc_cvasp)
+    ]		    
+
+# Gaussian
+def fp_params_Gaussian_args ():
+    doc_keywords = 'Keywords for Gaussian input.'
+    doc_multiplicity = 'Spin multiplicity for Gaussian input. If set to auto, the spin multiplicity will be detected automatically. If set to frag, the "fragment=N" method will be used.'
+    doc_nproc = 'The number of processors for Gaussian input.'
+	    
+    return [
+        Argument("doc_keywords", String or list, optional =False, doc = doc_keywords),
+        Argument("multiplicity", Integer or String, optional =False, doc = doc_multiplicity),
+        Argument("nproc", Integer, optional =False, doc = doc_nproc)
+    ]	    
+	    
+def fp_style_Gaussian_args ():
+    doc_use_clusters = 'If set to true, clusters will be taken instead of the whole system. This option does not work with DeePMD-kit 0.x.'
+    doc_cluster_cutoff = 'The cutoff radius of clusters if use_clusters is set to true.'
+    doc_fp_params_Gaussian = 'Parameters for Gaussian calculation.'
+    
+    return [
+        Argument("use_clusters", Boolean, optional =False, doc = doc_use_clusters),
+        Argument("cluster_cutoff", Float, optional =False, doc = doc_cluster_cutoff),
+        Argument("fp_params", Dict, [], [fp_params_args_Gaussian ()],  optional =False, doc = doc_fp_params_Gaussian)
+    ]	    
+	    
+# siesta
+def fp_params_siesta_args ():
+    doc_ecut = 'Define the plane wave cutoff for grid.'
+    doc_ediff = 'Tolerance of Density Matrix.'
+    doc_kspacing = 'Sample factor in Brillouin zones.'
+    doc_mixingweight = 'Proportion a of output Density Matrix to be used for the input Density Matrix of next SCF cycle (linear mixing).'
+    doc_NumberPulay = 'Controls the Pulay convergence accelerator.'
+
+    return [
+        Argument("ecut", Integer, optional =False, doc = doc_ecut),
+        Argument("ediff", Float, optional =False, doc = doc_ediff),
+        Argument("kspacing", Float, optional =False, doc = doc_kspacing),
+        Argument("mixingweight", Float, optional =False, doc = doc_mixingweight),	    
+        Argument("NumberPulay", Integer, optional =False, doc = doc_NumberPulay)
+    ]	    
+	    
+def fp_style_siesta_args ():
+    doc_use_clusters = 'If set to true, clusters will be taken instead of the whole system. This option does not work with DeePMD-kit 0.x.'
+    doc_cluster_cutoff = 'The cutoff radius of clusters if use_clusters is set to true.'
+    doc_fp_params_siesta = 'Parameters for siesta calculation.'
+    
+    return [
+        Argument("use_clusters", Boolean, optional =False, doc = doc_use_clusters),
+        Argument("cluster_cutoff", Float, optional =False, doc = doc_cluster_cutoff),
+        Argument("fp_params", Dict, [], [fp_params_args_siesta ()], optional =False, doc = doc_fp_params_siesta)
+    ]	
+
+# cp2k
+def fp_style_cp2k_args ():
+    doc_user_fp_params = 'Parameters for cp2k calculation. find detail in manual.cp2k.org. only the kind section must be set before use. we assume that you have basic knowledge for cp2k input.'
+    doc_external_input_path = 'Conflict with key:user_fp_params, use the template input provided by user, some rules should be followed, read the following text in detail.'
+    
+    return [
+        Argument("user_fp_params", Dict, optional =False, doc = doc_user_fp_params),
+        Argument("external_input_path", String, optional =False, doc = doc_external_input_path)
+    ]	
+			    
+
+
+def model_devi_nopbc_args ():
+    doc_model_devi_nopbc = 'Assume open boundary condition in MD simulations.'
+    
+    return [
+        Argument("model_devi_nopbc", Boolean, optional =False, doc = model_devi_nopbc)
+    ]	    
+
+
+fp_style	string	"vasp"	Software for First Principles. Options include “vasp”, “pwscf”, “siesta” and “gaussian” up to now.
+fp_task_max	Integer	20	Maximum of structures to be calculated in 02.fp of each iteration.
+fp_task_min	Integer	5	Minimum of structures to calculate in 02.fp of each iteration.
+fp_accurate_threshold	Float	0.9999	If the accurate ratio is larger than this number, no fp calculation will be performed, i.e. fp_task_max = 0.
+fp_accurate_soft_threshold	Float	0.9999	If the accurate ratio is between this number and fp_accurate_threshold, the fp_task_max linearly decays to zero.
+fp_cluster_vacuum	Float	None	If the vacuum size is smaller than this value, this cluster will not be choosen for labeling
  
 	
