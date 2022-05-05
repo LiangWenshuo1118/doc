@@ -279,8 +279,8 @@ def model_devi_jobs_args():
     return Argument("model_devi_jobs", List of dict, args, [], doc = doc_model_devi_jobs)    
  
 # Labeling
-# VASP
-def fp_style_VASP_args ():
+# vasp
+def fp_style_vasp_args ():
     doc_fp_pp_path = 'Directory of psuedo-potential file to be used for 02.fp exists.'
     doc_fp_pp_files = 'Psuedo-potential file to be used for 02.fp. Note that the order of elements should correspond to the order in type_map.'
     doc_fp_incar = 'Input file for VASP. INCAR must specify KSPACING and KGAMMA.'
@@ -295,8 +295,8 @@ def fp_style_VASP_args ():
         Argument("cvasp", Boolean, optional =False, doc = doc_cvasp)
     ]		    
 
-# Gaussian
-def fp_params_Gaussian_args ():
+# gaussian
+def fp_params_gaussian_args ():
     doc_keywords = 'Keywords for Gaussian input.'
     doc_multiplicity = 'Spin multiplicity for Gaussian input. If set to auto, the spin multiplicity will be detected automatically. If set to frag, the "fragment=N" method will be used.'
     doc_nproc = 'The number of processors for Gaussian input.'
@@ -307,15 +307,15 @@ def fp_params_Gaussian_args ():
         Argument("nproc", Integer, optional =False, doc = doc_nproc)
     ]	    
 	    
-def fp_style_Gaussian_args ():
+def fp_style_gaussian_args ():
     doc_use_clusters = 'If set to true, clusters will be taken instead of the whole system. This option does not work with DeePMD-kit 0.x.'
     doc_cluster_cutoff = 'The cutoff radius of clusters if use_clusters is set to true.'
-    doc_fp_params_Gaussian = 'Parameters for Gaussian calculation.'
+    doc_fp_params_gaussian = 'Parameters for Gaussian calculation.'
     
     return [
         Argument("use_clusters", Boolean, optional =False, doc = doc_use_clusters),
         Argument("cluster_cutoff", Float, optional =False, doc = doc_cluster_cutoff),
-        Argument("fp_params", Dict, [], [fp_params_args_Gaussian ()],  optional =False, doc = doc_fp_params_Gaussian)
+        Argument("fp_params", Dict, [], [fp_params_args_gaussian ()],  optional =False, doc = doc_fp_params_gaussian)
     ]	    
 	    
 # siesta
@@ -355,21 +355,48 @@ def fp_style_cp2k_args ():
         Argument("external_input_path", String, optional =False, doc = doc_external_input_path)
     ]	
 			    
-
-
-def model_devi_nopbc_args ():
-    doc_model_devi_nopbc = 'Assume open boundary condition in MD simulations.'
+def fp_style_variant_type_args ():
+    doc_fp_style = 'Assume open boundary condition in MD simulations.'
     
+    return Variant("type", [Argument("vasp", dict, fp_style_vasp_args()),
+                            Argument("gaussian", dict, fp_style_gaussian_args()),
+                            Argument("siesta", dict, fp_style_siesta_args()),
+                            Argument("cp2k", dict, fp_style_cp2k_args())], 
+                   optional = False,
+                   doc = doc_fp_style)    
+	    
+def fp_task_max_args ():
+    doc_fp_task_max = 'Maximum of structures to be calculated in 02.fp of each iteration.'
+
     return [
-        Argument("model_devi_nopbc", Boolean, optional =False, doc = model_devi_nopbc)
+        Argument("fp_task_max", Integer, optional =False, doc = doc_fp_task_max)
+    ]
+   
+def fp_task_min_args ():
+    doc_fp_task_min = 'Minimum of structures to be calculated in 02.fp of each iteration.'
+
+    return [
+        Argument("fp_task_min", Integer, optional =False, doc = doc_fp_task_min)
+    ]
+	    
+def fp_accurate_threshold_args ():
+    doc_fp_accurate_threshold = 'If the accurate ratio is larger than this number, no fp calculation will be performed, i.e. fp_task_max = 0.'
+
+    return [
+        Argument("fp_accurate_threshold", Float, optional =True, doc = doc_fp_accurate_threshold)
+    ]
+
+def fp_accurate_soft_threshold_args ():
+    doc_fp_accurate_soft_threshold = 'If the accurate ratio is between this number and fp_accurate_threshold, the fp_task_max linearly decays to zero.'
+
+    return [
+        Argument("fp_accurate_soft_threshold", Float, optional =True, doc = doc_fp_accurate_soft_threshold)
     ]	    
 
+def fp_cluster_vacuum_args ():
+    doc_fp_cluster_vacuum = 'If the vacuum size is smaller than this value, this cluster will not be choosen for labeling.'
 
-fp_style	string	"vasp"	Software for First Principles. Options include “vasp”, “pwscf”, “siesta” and “gaussian” up to now.
-fp_task_max	Integer	20	Maximum of structures to be calculated in 02.fp of each iteration.
-fp_task_min	Integer	5	Minimum of structures to calculate in 02.fp of each iteration.
-fp_accurate_threshold	Float	0.9999	If the accurate ratio is larger than this number, no fp calculation will be performed, i.e. fp_task_max = 0.
-fp_accurate_soft_threshold	Float	0.9999	If the accurate ratio is between this number and fp_accurate_threshold, the fp_task_max linearly decays to zero.
-fp_cluster_vacuum	Float	None	If the vacuum size is smaller than this value, this cluster will not be choosen for labeling
- 
-	
+    return [
+        Argument("fp_cluster_vacuum", Float, optional =True, doc = doc_fp_cluster_vacuum)
+    ]	 
+
